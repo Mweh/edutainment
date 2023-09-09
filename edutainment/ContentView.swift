@@ -13,10 +13,11 @@ struct ContentView: View {
     var questionAmount = [5, 10, 15]
     @State private var answer = [String](repeating: "", count: 15)
     @State private var randomNumber = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].shuffled()
-    //    @FocusState private var inputIsFocus: Bool
+        @FocusState private var inputIsFocus: Bool
     @State private var isShowSetting = true
     @State private var isStart = false
     @State private var isCorrect = false
+    @State private var correctAnswer = 0
     @State private var inCorrectAnswer = 0
     @State private var isShowResult = false
     
@@ -58,7 +59,7 @@ struct ContentView: View {
                                             (Int(answer[num]) ?? 0) == (multiTable * (num > 10 ? randomNumber[num - 5] : randomNumber[num])) ? .green : .red)
                                         .frame(width: 200, alignment: .center)
                                         .keyboardType(.numberPad)
-                                    //                                            .focused($inputIsFocus)
+                                                                                .focused($inputIsFocus)
                                 }
                             }
                         }
@@ -67,14 +68,14 @@ struct ContentView: View {
                     }
                     Button("Check answer") {
                         checkAnswer()
-                        isShowResult.toggle()
+                        isShowResult = true
                     }
                     if isShowResult {
                         if isCorrect {
                             Text("All correct!")
                                 .foregroundColor(.green)
                         } else {
-                            Text("Some answers are incorrect. Try again.")
+                            Text("\(correctAnswer) correct & \(inCorrectAnswer) incorrect answer. Try again.")
                                 .foregroundColor(.red)
                         }
                     }
@@ -86,11 +87,13 @@ struct ContentView: View {
             }
             .navigationTitle("Edutainment")
                         .toolbar(){
-            //                ToolbarItem(placement: .keyboard){
-            //                    Button("Done"){
-            //                        inputIsFocus = false
-            //                    }
-            //                }
+                            ToolbarItem(placement: .keyboard){
+                                Button("Done"){
+                                    inputIsFocus = false
+                                }
+                            }
+                        }
+                        .toolbar{
                             Button("Reset", action: reset)
                         }
         }
@@ -107,19 +110,24 @@ struct ContentView: View {
         }
     }
     func checkAnswer() {
-        var correctCount = 0
-        
-        for num in 0..<questionDefaultAmount {
-            let userAnswer = Int(answer[num]) ?? 0
-            let correctAnswer = multiTable * (num > 10 ? randomNumber[num - 5] : randomNumber[num])
+        withAnimation(.default){
+            var correctCount = 0
+            var inCorrectCount = 0
             
-            if userAnswer == correctAnswer {
-                correctCount += 1
-            } else {
-                inCorrectAnswer += 1
+            for num in 0..<questionDefaultAmount {
+                let userAnswer = Int(answer[num]) ?? 0
+                let trueAnswer = multiTable * (num > 10 ? randomNumber[num - 5] : randomNumber[num])
+                
+                if userAnswer == trueAnswer {
+                    correctCount += 1
+                } else {
+                    inCorrectCount += 1
+                }
             }
+            correctAnswer = correctCount
+            inCorrectAnswer = inCorrectCount
+            isCorrect = correctCount == questionDefaultAmount
         }
-        isCorrect = correctCount == questionDefaultAmount
     }
 }
 
