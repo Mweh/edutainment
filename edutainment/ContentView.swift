@@ -13,7 +13,7 @@ struct ContentView: View {
     var questionAmount = [5, 10, 15]
     @State private var answer = [String](repeating: "", count: 15)
     @State private var randomNumber = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].shuffled()
-        @FocusState private var inputIsFocus: Bool
+    @FocusState private var inputIsFocus: Bool
     @State private var isShowSetting = true
     @State private var isStart = false
     @State private var isCorrect = false
@@ -59,7 +59,7 @@ struct ContentView: View {
                                             (Int(answer[num]) ?? 0) == (multiTable * (num > 10 ? randomNumber[num - 5] : randomNumber[num])) ? .green : .red)
                                         .frame(width: 200, alignment: .center)
                                         .keyboardType(.numberPad)
-                                                                                .focused($inputIsFocus)
+                                        .focused($inputIsFocus)
                                 }
                             }
                         }
@@ -75,27 +75,27 @@ struct ContentView: View {
                             Text("All correct!")
                                 .foregroundColor(.green)
                         } else {
-                            Text("\(correctAnswer) correct & \(inCorrectAnswer) incorrect answer. Try again.")
+                            Text("\(correctAnswer) correct & \(inCorrectAnswer) incorrect answers. Try again.")
                                 .foregroundColor(.red)
                         }
                     }
                 }
-//                Button("Debug"){
-//                    print("questionAmount: \(questionAmount)")
-//                    print("questionDefaultAmount: \(questionDefaultAmount)")
-//                }
+                //                Button("Debug"){
+                //                    print("questionAmount: \(questionAmount)")
+                //                    print("questionDefaultAmount: \(questionDefaultAmount)")
+                //                }
             }
             .navigationTitle("Edutainment")
-                        .toolbar(){
-                            ToolbarItem(placement: .keyboard){
-                                Button("Done"){
-                                    inputIsFocus = false
-                                }
-                            }
-                        }
-                        .toolbar{
-                            Button("Reset", action: reset)
-                        }
+            .toolbar(){
+                ToolbarItem(placement: .keyboard){
+                    Button("Done"){
+                        inputIsFocus = false
+                    }
+                }
+            }
+            .toolbar{
+                Button("Reset", action: reset)
+            }
         }
     }
     func reset() {
